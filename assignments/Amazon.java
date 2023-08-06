@@ -1,51 +1,68 @@
-package marathon;
+package week4.assignments;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 public class Amazon {
 
-	public static void main(String[] args) throws InterruptedException {
-
+	public static void main(String[] args) throws InterruptedException, IOException {
+        
 		ChromeDriver driver = new ChromeDriver();
-		
-		driver.get("https://www.amazon.in/");
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
-		driver.manage().window().maximize();
-		
-		driver.findElement(By.id("twotabsearchtextbox")).sendKeys("Bags");
-		
-		Thread.sleep(2000);
-		driver.findElement(By.xpath("//span[text()=' for boys']")).click();
-		
-		WebElement result = driver.findElement(By.xpath("//div[@class='a-section a-spacing-small a-spacing-top-small']"));
-		String text = result.getText();
-		System.out.println(text);
-		
-		Thread.sleep(2000);
-        driver.findElement(By.xpath("(//div[@id='brandsRefinements']//i)[1]")).click();
-        driver.findElement(By.xpath("//span[text()='Skybags'][1]")).click();
-        
-        Thread.sleep(1000);
-        driver.findElement(By.xpath("//span[text()='Last 90 days']")).click();
-        
-        WebElement result1 = driver.findElement(By.xpath("//span[@class='a-size-base-plus a-color-base a-text-normal']"));
-        String name = result1.getText();
-        System.out.println("Name of the bag is " +name);
-        
-        WebElement result2 = driver.findElement(By.xpath("//span[text()='997']"));
-		String amt = result2.getText();
-		System.out.println("Cost is " +amt);
-		
-		String title = driver.getTitle();
-		System.out.println("Title of the page is - "+title);
-		
-		Thread.sleep(2000);
-		driver.close();
-		
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+ 	    driver.manage().window().maximize();
+ 	    
+ 	    driver.get("https://www.amazon.in/");
+ 	    driver.findElement(By.xpath("//input[@id='twotabsearchtextbox']")).sendKeys("oneplus 9 pro",Keys.ENTER);
+ 	    
+ 	    WebElement text = driver.findElement(By.xpath("//span[text()='44,699']"));
+ 	    String price = text.getText();
+ 	    System.out.println(price);
+ 	    
+ 	    //WebElement mouseHover = driver.findElement(By.xpath("//span[text()='2.2 out of 5 stars']"));
+ 	    //Actions obj = new Actions(driver);
+ 	    //obj.moveToElement(mouseHover).perform();
+ 	    
+ 	    
+ 	    WebElement text2 = driver.findElement(By.xpath("//span[text()='6']"));
+ 	    String ratings = text2.getText();
+ 	    System.out.println(ratings);
+ 	    
+ 	    Thread.sleep(3000);
+ 	    
+ 	    driver.findElement(By.xpath("//span[contains(text(),'Morning Mist')]")).click();
+ 	    
+ 	    File scr = driver.getScreenshotAs(OutputType.FILE);
+ 	    File dest = new File("./snap.img.png");
+ 	    FileUtils.copyFile(scr, dest);
+ 	    
+ 	    Set<String> windowHandles = driver.getWindowHandles();
+ 	    List<String> allLinks = new ArrayList<String>(windowHandles);
+ 	    driver.switchTo().window(allLinks.get(1));
+ 	    driver.findElement(By.xpath("//input[@id='add-to-cart-button']")).click();
+ 	    Thread.sleep(1000);
+ 	    
+ 	   
+ 	    WebElement total = driver.findElement(By.xpath("//span[text()='₹44,699.00']"));
+ 	    String cart = total.getText();
+ 	    System.out.println(cart);
+ 	    boolean isVisible = total.isDisplayed();
+ 	    System.out.println(isVisible);
+ 	    
+ 	    Thread.sleep(1000);
+ 	    driver.quit();
+ 	    
+ 	    
 	}
 
 }
